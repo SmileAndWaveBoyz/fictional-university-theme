@@ -1,15 +1,15 @@
 <?php
 
 get_header();
-pageBanner([
+pageBanner(array(
   'title' => 'Past Events',
-  'subtitle' => 'A recap of our past events.',
-]);
-?>
+  'subtitle' => 'A recap of our past events.'
+));
+ ?>
 
 <div class="container container--narrow page-section">
 <?php
-
+  
   $today = date('Ymd');
   $pastEvents = new WP_Query(array(
     'paged' => get_query_var('paged', 1),
@@ -28,8 +28,9 @@ pageBanner([
   ));
 
   while($pastEvents->have_posts()) {
-    $pastEvents->the_post();
-    get_template_part('template-parts/content-event');}
+    $pastEvents->the_post(); 
+    get_template_part('template-parts/content-event');
+  }
   echo paginate_links(array(
     'total' => $pastEvents->max_num_pages
   ));

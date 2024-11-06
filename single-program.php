@@ -1,11 +1,11 @@
 <?php
-
+  
   get_header();
 
   while(have_posts()) {
     the_post();
     pageBanner();
-    ?>
+     ?>
 
     <div class="container container--narrow page-section">
           <div class="metabox metabox--position-up metabox--with-home-link">
@@ -14,7 +14,7 @@
 
       <div class="generic-content"><?php the_content(); ?></div>
 
-      <?php
+      <?php 
         $relatedProfessors = new WP_Query(array(
           'posts_per_page' => -1,
           'post_type' => 'professor',
@@ -72,12 +72,12 @@
 
         if ($homepageEvents->have_posts()) {
           echo '<hr class="section-break">';
-          echo '<h2 class="headline headline--medium">Upcoming ' . get_the_title() . ' Events</h2>';
+        echo '<h2 class="headline headline--medium">Upcoming ' . get_the_title() . ' Events</h2>';
 
-          while($homepageEvents->have_posts()) {
-            $homepageEvents->the_post();
-            get_template_part('template-parts/content-event');
-          }
+        while($homepageEvents->have_posts()) {
+          $homepageEvents->the_post();
+          get_template_part('template-parts/content-event');
+        }
         }
 
         wp_reset_postdata();
@@ -85,24 +85,22 @@
 
         if ($relatedCampuses) {
           echo '<hr class="section-break">';
-          echo '<h2 class="headline headline--medium">' . get_the_title() . ' is available at these campuses: </h2>';
+          echo '<h2 class="headline headline--medium">' . get_the_title() . ' is Available At These Campuses:</h2>';
 
-          echo '<ul class="min-list link-list>"';
-          foreach ($relatedCampuses as $campus) {
-            ?>
-              <li>
-                <a href="<?php get_the_permalink(); ?>"><?php echo get_the_title($campus) ?></a>
-              </li>
-            <?php
+          echo '<ul class="min-list link-list">';
+          foreach($relatedCampuses as $campus) {
+            ?> <li><a href="<?php echo get_the_permalink($campus); ?>"><?php echo get_the_title($campus) ?></a></li> <?php
           }
           echo '</ul>';
+
         }
+
       ?>
 
     </div>
+    
 
-
-
+    
   <?php }
 
   get_footer();
