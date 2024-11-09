@@ -198,11 +198,16 @@ __webpack_require__.r(__webpack_exports__);
 class Search {
   //1. Describe and create our object.
   constructor() {
+    this.resultsDiv = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#search-overlay__results');
     this.openButton = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.js-search-trigger');
     this.closeButton = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.search-overlay__close');
     this.searchOverlay = jquery__WEBPACK_IMPORTED_MODULE_0___default()('.search-overlay');
+    this.searchField = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#search-term');
     this.events();
     this.isOverlayOpen = false;
+    this.isSpinnerVisible = false;
+    this.previousValue;
+    this.typingTimer;
   }
 
   //2. Events
@@ -210,9 +215,30 @@ class Search {
     this.openButton.on('click', this.openOverlay.bind(this));
     this.closeButton.on('click', this.closeOverlay.bind(this));
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).on('keyup', this.keyPressDispatcher.bind(this));
+    this.searchField.on('keyup', this.typingLogic.bind(this));
   }
 
   //3. Methods
+  typingLogic() {
+    if (this.searchField.val() !== this.previousValue) {
+      clearTimeout(this.typingTimer);
+      if (this.searchField.val()) {
+        if (!this.isSpinnerVisible) {
+          this.resultsDiv.html('<div class="spinner-loader"></div>');
+          this.isSpinnerVisible = true;
+        }
+        this.typingTimer = setTimeout(this.getResults.bind(this), 2000);
+      } else {
+        this.resultsDiv.html('');
+        this.isSpinnerVisible = false;
+      }
+    }
+    this.previousValue = this.searchField.val();
+  }
+  getResults() {
+    this.resultsDiv.html('Imageine real search results here');
+    this.isSpinnerVisible = false;
+  }
   openOverlay() {
     this.searchOverlay.addClass('search-overlay--active');
     jquery__WEBPACK_IMPORTED_MODULE_0___default()('body').addClass('body-no-scroll');
@@ -224,7 +250,7 @@ class Search {
     this.isOverlayOpen = false;
   }
   keyPressDispatcher(e) {
-    if (e.originalEvent.key == 's' && !this.isOverlayOpen) {
+    if (e.originalEvent.key == 's' && !this.isOverlayOpen && !jquery__WEBPACK_IMPORTED_MODULE_0___default()('input, textarea').is(':focus')) {
       this.openOverlay();
     }
     if (e.originalEvent.key == 'Escape' && !this.isOverlayOpen) {
