@@ -236,15 +236,18 @@ class Search {
     this.previousValue = this.searchField.val();
   }
   getResults() {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`http://fictional-university.local/wp-json/wp/v2/posts?search=${this.searchField.val()}`, posts => {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${universityData.root_url}/wp-json/wp/v2/posts?search=${this.searchField.val()}`, posts => {
       this.resultsDiv.html(`
                 <h2 class="search-overlay__section_title">General Information</h2>
-                <ul class="link-list min-list">
-                    ${posts.map(item => `<li> <a href="${item.link}">${item.title.rendered}</a> </li>`).join('')}
-                </ul>
+                ${posts.length ? `
+                    <ul class="link-list min-list">
+                        ${posts.map(item => `<li> <a href="${item.link}">${item.title.rendered}</a> </li>`).join('')}
+                    </ul>
+                    ` : '<p>No general information matches that search.</p>'}
+
                 `);
+      this.isSpinnerVisible = false;
     });
-    this.isSpinnerVisible = false;
   }
   openOverlay() {
     this.searchOverlay.addClass('search-overlay--active');
