@@ -237,20 +237,17 @@ class Search {
     this.previousValue = this.searchField.val();
   }
   getResults() {
-    jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${universityData.root_url}/wp-json/wp/v2/posts?search=${this.searchField.val()}`, posts => {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(`${universityData.root_url}/wp-json/wp/v2/pages?search=${this.searchField.val()}`, pages => {
-        var combinedResults = posts.concat(pages);
-        this.resultsDiv.html(`
-                    <h2 class="search-overlay__section_title">General Information</h2>
-                    ${combinedResults.length ? `
-                        <ul class="link-list min-list">
-                            ${combinedResults.map(item => `<li> <a href="${item.link}">${item.title.rendered}</a> </li>`).join('')}
-                        </ul>
-                        ` : '<p>No general information matches that search.</p>'}
-
-                    `);
-        this.isSpinnerVisible = false;
-      });
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().when(jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(universityData.root_url + "/wp-json/wp/v2/posts?search=" + this.searchField.val()), jquery__WEBPACK_IMPORTED_MODULE_0___default().getJSON(universityData.root_url + "/wp-json/wp/v2/pages?search=" + this.searchField.val())).then((posts, pages) => {
+      var combinedResults = posts[0].concat(pages[0]);
+      this.resultsDiv.html(`
+                <h2 class="search-overlay__section-title">General Information</h2>
+                ${combinedResults.length ? '<ul class="link-list min-list">' : "<p>No general information matches that search.</p>"}
+                ${combinedResults.map(item => `<li><a href="${item.link}">${item.title.rendered}</a></li>`).join("")}
+                ${combinedResults.length ? "</ul>" : ""}
+            `);
+      this.isSpinnerVisible = false;
+    }, () => {
+      this.resultsDiv.html("<p>Unexpected error; please try again.</p>");
     });
   }
   openOverlay() {
