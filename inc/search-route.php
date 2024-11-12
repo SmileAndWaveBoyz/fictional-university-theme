@@ -9,6 +9,21 @@ function universityRegisterSearch() {
     ]);
 }
 
-function universitySearchResults() {
-    return 'Congrats';
+function universitySearchResults($data) {
+    $professors = new WP_Query([
+        'post_type' => 'professor',
+        's' => sanitize_text_field($data['term'])
+    ]);
+
+    $professorResults = [];
+
+    while ($professors->have_posts()) {
+        $professors->the_post();
+        array_push($professorResults, [
+            'title' => get_the_title(),
+            'url' => get_the_permalink(),
+        ]);
+    }
+
+    return $professorResults;
 }
