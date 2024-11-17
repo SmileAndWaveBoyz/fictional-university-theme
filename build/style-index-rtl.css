@@ -485,7 +485,7 @@ body.login {
   background-color: #FAF0CA;
 }
 
-.login h1 a {
+.login .wp-login-logo a {
   color: #0D3B66;
   font-size: 30px;
   font-weight: 300;
