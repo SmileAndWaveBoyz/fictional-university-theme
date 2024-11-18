@@ -206,9 +206,35 @@ class MyNotes {
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".delete-note").on("click", this.deleteNote);
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".edit-note").on("click", this.editNote.bind(this));
     jquery__WEBPACK_IMPORTED_MODULE_0___default()(".update-note").on("click", this.updateNote.bind(this));
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(".submit-note").on("click", this.createNote.bind(this));
   }
 
   // Methods will go here
+  createNote(e) {
+    var ourNewPost = {
+      'title': jquery__WEBPACK_IMPORTED_MODULE_0___default()('.new-note-title').val(),
+      'content': jquery__WEBPACK_IMPORTED_MODULE_0___default()('.new-note-body').val(),
+      'status': 'publish'
+    };
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      beforeSend: xhr => {
+        xhr.setRequestHeader('X-WP-Nonce', universityData.nonce);
+      },
+      url: universityData.root_url + '/wp-json/wp/v2/note/',
+      type: 'POST',
+      data: ourNewPost,
+      success: response => {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('.new-note-title', '.new-note-body').val('');
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()('<li>Data here</li>').prependTo('#my-notes').hide().slideDown();
+        console.log('Congrats');
+        console.log(response);
+      },
+      error: response => {
+        console.log('Sorry');
+        console.log(response);
+      }
+    });
+  }
   editNote(e) {
     var thisNote = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).parents('li');
     if (thisNote.data('state') == 'editable') {
@@ -252,7 +278,7 @@ class MyNotes {
     var thisNote = jquery__WEBPACK_IMPORTED_MODULE_0___default()(e.target).parents('li');
     var ourUpdatedPost = {
       'title': thisNote.find('.note-title-field').val(),
-      'Content': thisNote.find('.note-body-field').val()
+      'content': thisNote.find('.note-body-field').val()
     };
     jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
       beforeSend: xhr => {
